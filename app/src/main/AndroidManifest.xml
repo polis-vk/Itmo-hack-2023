@@ -27,6 +27,9 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <meta-data
+                android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+                android:value="GlideModule" />
         </activity>
         <activity android:name="ru.ok.android.itmohack2023.UrlConnectionActivity" />
         <activity android:name="ru.ok.android.itmohack2023.WebViewActivity" />
