@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.Initializer
 import chilladvanced.Logger
 import chilladvanced.Logger.runSending
 import chilladvanced.ProxyServer
@@ -13,46 +14,11 @@ import chilladvanced.SocketConnectHttpChecker
 class MainActivity : AppCompatActivity() {
 
 
-    private fun setProxyHostHttp(host: String) {
-        System.setProperty("http.proxyHost", host);
-    }
 
-    private fun setProxyPortHttp(host: String) {
-        System.setProperty("http.proxyPort", host);
-    }
-
-    private fun setProxyHostAnother(host: String) {
-        System.setProperty("https.proxyHost", host);
-        System.setProperty("ftp.proxyHost", host);
-        System.setProperty("socksProxyHost", host);
-    }
-
-    private fun setProxyPortAnother(port: String) {
-        System.setProperty("https.proxyPort", port);
-        System.setProperty("ftp.proxyPort", port);
-        System.setProperty("socksProxyPort", port);
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val proxyPortHttp = 3128;
-        val proxyPortAnother = 3129;
-        setProxyHostHttp("127.0.0.1")
-        setProxyHostAnother("127.0.0.1")
-        setProxyPortHttp("$proxyPortHttp")
-        setProxyPortAnother("$proxyPortAnother")
-
-        runSending()
-
-        ProxyServer(
-            proxyPortHttp,
-            SocketConnectHttpChecker.Companion::connectAndCountTraffic
-        ).startServer()
-        ProxyServer(
-            proxyPortAnother,
-            SocketConnect.Companion::connectAndCountTraffic
-        ).startServer()
-
-        delayShutdownEvent(10000)
+        finishAffinity()
+        Initializer.initPropertiesAndStartProxies() // default ports 3128 3129
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -94,18 +60,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun delayShutdownEvent(millis: Long) {
-        Thread.setDefaultUncaughtExceptionHandler { t, e -> // perform any necessary cleanup or shutdown tasks here
-            println("Uncaught exception occurred: " + e.message)
-            try {
-                // delay the shutdown for 2 seconds
-                Thread.sleep(millis)
-            } catch (ex: InterruptedException) {
-                // handle the InterruptedException if necessary
-                ex.printStackTrace()
-            }
-            // shut down the program
-            System.exit(1)
-        }
-    }
+
 }
