@@ -24,7 +24,7 @@ import java.util.function.BiConsumer
  */
 class ProxyServer(port: Int, logger: Logger) : Thread() {
     private val logger: Logger
-    private val threadExecutor: ExecutorService
+    private val threadExecutor: ExecutorService = Executors.newCachedThreadPool()
     var mIsRunning = false
     private var serverSocket: ServerSocket? = null
     val port: Int
@@ -327,7 +327,6 @@ class ProxyServer(port: Int, logger: Logger) : Thread() {
     }
 
     init {
-        threadExecutor = Executors.newCachedThreadPool()
         this.port = port
         this.logger = logger
     }
