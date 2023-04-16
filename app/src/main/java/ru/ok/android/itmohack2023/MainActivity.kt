@@ -1,12 +1,37 @@
 package ru.ok.android.itmohack2023
 
 import android.content.Intent
+import android.net.Proxy
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.Logger
+import chilladvanced.ProxyServer
 
 class MainActivity : AppCompatActivity() {
+
+    private fun setProxyHost(host: String) {
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("ftp.proxyHost", host);
+        System.setProperty("socksProxyHost", host);
+    }
+
+    private fun setProxyPort(port: String) {
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyPort", port);
+        System.setProperty("ftp.proxyPort", port);
+        System.setProperty("socksProxyPort", port);
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val proxyPort = 3128;
+        setProxyHost("127.0.0.1")
+        setProxyPort("$proxyPort")
+
+        ProxyServer(proxyPort, Logger()).startServer()
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.url_connection).setOnClickListener {

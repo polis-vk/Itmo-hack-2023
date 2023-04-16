@@ -31,7 +31,7 @@ class URL(private val url: URL) : Serializable {
         val start = System.currentTimeMillis();
         val res = url.openConnection()
         val duration = System.currentTimeMillis() - start;
-        Logger.log(toString(), "URL.OPEN_CONNECTIONS", duration);
+//        Logger.log(toString(), "URL.OPEN_CONNECTIONS", duration);
         return res;
     }
 
@@ -40,7 +40,7 @@ class URL(private val url: URL) : Serializable {
         val start = System.currentTimeMillis();
         val res = url.openConnection(proxy)
         val duration = System.currentTimeMillis() - start;
-        Logger.log(toString(), "URL.OPEN_CONNECTIONS_PROXY", duration);
+//        Logger.log(toString(), "URL.OPEN_CONNECTIONS_PROXY", duration);
         return res;
     }
 
