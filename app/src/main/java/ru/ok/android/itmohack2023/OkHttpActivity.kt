@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
-import ru.ok.android.itmohack2023.logger.ApiInterceptor
+import ru.ok.android.itmohack2023.okhttp.BaseClient
 import java.io.IOException
 
 class OkHttpActivity : AppCompatActivity() {
@@ -44,12 +43,7 @@ class OkHttpActivity : AppCompatActivity() {
         val request: Request = Request.Builder()
             .url(url)
             .build()
-        OkHttpClient
-            /// added part
-            .Builder()
-            .addInterceptor { chain -> ApiInterceptor.intercept(chain) }
-            .build()
-            /// end of added part
+        BaseClient.getBaseOkHttpClient()
             .newCall(request).execute().use { response -> return response.body?.string() }
     }
 }

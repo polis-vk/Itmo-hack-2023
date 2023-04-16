@@ -1,6 +1,5 @@
 package ru.ok.android.itmohack2023.logger.dto
 
-import android.provider.Settings
 import com.google.gson.annotations.SerializedName
 
 data class Stat(
@@ -11,13 +10,11 @@ data class Stat(
     @SerializedName("statusCode")
     val statusCode: Int,
     @SerializedName("date")
-    val date: Int,
+    val date: String,
     @SerializedName("duration")
     val duration: Long,
     @SerializedName("size")
     val size: Int,
     @SerializedName("locationOfRequest")
     val locationOfRequest: String?,
-    @SerializedName("deviceId")
-    val deviceId: String = Settings.Secure.ANDROID_ID,
 )

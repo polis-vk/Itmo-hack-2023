@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
+
 class GlideActivity : AppCompatActivity() {
     private lateinit var cat1: ImageView
     private lateinit var cat2: ImageView
@@ -27,9 +28,17 @@ class GlideActivity : AppCompatActivity() {
     }
 
     private fun bindImages() {
-        Glide.with(this).load(URLS[(0 until size).random()]).into(cat1)
-        Glide.with(this).load(URLS[(0 until size).random()]).into(cat2)
-        Glide.with(this).load(URLS[(0 until size).random()]).into(cat3)
+        val glideInstance = Glide.with(this)
+
+        glideInstance
+            .load(URLS[(0 until size).random()])
+            .into(cat1)
+        glideInstance
+            .load(URLS[(0 until size).random()])
+            .into(cat2)
+        glideInstance
+            .load(URLS[(0 until size).random()])
+            .into(cat3)
     }
 
     companion object {

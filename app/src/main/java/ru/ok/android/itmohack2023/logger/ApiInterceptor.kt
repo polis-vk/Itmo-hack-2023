@@ -1,15 +1,13 @@
 package ru.ok.android.itmohack2023.logger
 
-import android.graphics.drawable.Drawable
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.ok.android.itmohack2023.logger.dto.Stat
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 /// this class is used to intercept the requests
@@ -44,7 +42,7 @@ class ApiInterceptor {
             }
             result += requestStartMessage
 
-            val startNs = System.nanoTime()
+            val startNs = System.currentTimeMillis()
             val response: Response
             try {
                 response = chain.proceed(request)
@@ -52,59 +50,46 @@ class ApiInterceptor {
                 result += "<-- HTTP FAILED: $e"
                 throw e
             }
-            val endNs = System.nanoTime()
-            val tookMs = TimeUnit.NANOSECONDS.toMillis(endNs - startNs)
+            val endNs = System.currentTimeMillis()
+            val tookMs = endNs - startNs
 
             val responseBody = response.body!!
             val contentLength = responseBody.contentLength()
             result += " <-- ${response.code}${if (response.message.isEmpty()) "" else ' ' + response.message} (${tookMs}ms${if (!logHeaders) ", $contentLength body" else ""})"
+            println(startNs)
+            println(TimeUnit.NANOSECONDS.toMillis(startNs))
             val stat = Stat(
                 url = request.url.toString(),
                 size = contentLength.toInt(),
                 method = request.method,
                 statusCode = response.code,
                 duration = tookMs,
-                date = TimeUnit.NANOSECONDS.toMillis(startNs).toInt(),
+                date = startNs.toString(),
                 locationOfRequest = null
             )
             logger.log(stat.toString())
-            Carrier(stat = stat, locationOfRequest = null).send()
+            Carrier(stat = stat, locationOfRequest = null).send(UUID.randomUUID().toString())
 
             return response
         }
 
-        fun glideListener() : RequestListener<Drawable> {
-            return object : RequestListener<Drawable> {
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    println(resource.toString())
-                    println(model.toString())
-                    println(target.toString())
-                    println(dataSource.toString())
-                    println(isFirstResource.toString())
-
-                    return false
-                }
-
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    println(e.toString())
-                    println(model.toString())
-                    println(target.toString())
-                    println(isFirstResource.toString())
-
-                    return false
-                }
-            }
+        fun connectionWrapper(connection: URL) : HttpURLConnection {
+            val startMs = System.currentTimeMillis()
+            val result = connection.openConnection() as HttpURLConnection
+            val endMs = System.currentTimeMillis()
+            Carrier(
+                Stat(
+                    url = result.url.toString(),
+                    size = result.contentLength,
+                    method = result.requestMethod,
+                    statusCode = result.responseCode,
+                    duration = endMs - startMs,
+                    date = result.date.toString(),
+                    locationOfRequest = null
+                ),
+                null
+            ).send(UUID.randomUUID().toString())
+            return result
         }
     }
 }

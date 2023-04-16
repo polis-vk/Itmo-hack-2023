@@ -5,8 +5,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
-import okhttp3.OkHttpClient
-import ru.ok.android.itmohack2023.logger.ApiInterceptor
+import ru.ok.android.itmohack2023.okhttp.BaseClient
 
 class PicassoActivity : AppCompatActivity() {
     private lateinit var dog1: ImageView
@@ -30,13 +29,11 @@ class PicassoActivity : AppCompatActivity() {
     }
 
     private fun bindImages() {
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor { chain -> ApiInterceptor.intercept(chain) }
-            .build();
-
+        val httpClient = BaseClient.getBaseOkHttpClient()
+        /// working
         val picassoBuilder =
             Picasso.Builder(this.applicationContext).downloader(OkHttp3Downloader(httpClient))
-                .build();
+                .build()
         /// extract Picasso.get() to variable
         // and change it to
         // Picasso.Builder(...).downloader(...).build()
