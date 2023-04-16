@@ -1,14 +1,27 @@
 package ru.ok.android.itmohack2023
 
+import android.app.ActivityManager
+import android.app.usage.NetworkStatsManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import ru.itmo.networkmonitor.NetworkMonitorTask
 
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        NetworkMonitorTask(
+            getSystemService(NETWORK_STATS_SERVICE) as NetworkStatsManager, getSystemService(
+                Context.ACTIVITY_SERVICE
+            ) as ActivityManager,
+            listOf("ru.ok")
+        ).start()
         findViewById<View>(R.id.url_connection).setOnClickListener {
             startActivity(Intent(this, UrlConnectionActivity::class.java))
         }
