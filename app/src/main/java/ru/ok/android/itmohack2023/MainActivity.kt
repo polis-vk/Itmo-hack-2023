@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        finishAffinity()
         super.onCreate(savedInstanceState)
         NetworkLogger.initializeAndRunLogging()
 
