@@ -1,11 +1,19 @@
 package chilladvanced
 
-class NativeLibraryTracker {
+import android.net.TrafficStats
+import android.net.TrafficStats.getTotalRxBytes
 
 
-    fun start() {
+class NativeLibraryTracker() {
+//    val currentThread: Int
+//    val totalTxBytes = TrafficStats.getTotalTxBytes()
+//    init {
+//        currentThread = TrafficStats.getUidRxBytes()
+//        TrafficStats.getThreadStatsTag()
+//        val totalRxBytes = TrafficStats..getTotalRxBytes()
+//    }
 
-    }
+
 
     fun stop() {
 

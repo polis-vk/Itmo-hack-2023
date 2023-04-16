@@ -1,6 +1,10 @@
 package chilladvanced
 
+import android.content.Context
+import android.os.Build
+import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.gson.Gson
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -27,18 +31,23 @@ typealias Timestamp = Long
 
 object Logger {
     @JvmStatic
-    val userId: UUID = UUID.randomUUID()
+    val userId: String = Build.ID + "-" + UUID.randomUUID()
+
     @JvmStatic
     private val storage = mutableSetOf<RequestLog>()
+
     @JvmStatic
     val sendLogsLock = Mutex()
+
     @JvmStatic
     val gson = Gson()
 
     @JvmStatic
     val map: ConcurrentHashMap<Host, Pair<NETWORK_METHODS, Timestamp>> = ConcurrentHashMap()
+
     @JvmStatic
     var lastUpdate = AtomicLong();
+
     @JvmStatic
     fun log(
         host: String,
@@ -69,6 +78,7 @@ object Logger {
 
 
     val SEND_LOG_TIME_SECOND = 1
+
     @JvmStatic
     fun runSending() {
         Thread {
