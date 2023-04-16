@@ -4,18 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import chilladvanced.Initializer
-import chilladvanced.Logger
-import chilladvanced.Logger.runSending
-import chilladvanced.ProxyServer
-import chilladvanced.SocketConnect
-import chilladvanced.SocketConnectHttpChecker
+import chilladvanced.NetworkLogger
 
 class MainActivity : AppCompatActivity() {
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        finishAffinity()
         super.onCreate(savedInstanceState)
-        Initializer.initPropertiesAndStartProxies() // default ports 3128 3129
+        NetworkLogger.initializeAndRunLogging()
+
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.url_connection).setOnClickListener {
             startActivity(Intent(this, UrlConnectionActivity::class.java))
@@ -54,6 +54,4 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, DownloadManagerActivity::class.java))
         }
     }
-
-
 }
