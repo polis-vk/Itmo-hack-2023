@@ -6,5 +6,6 @@ enum class NETWORK_METHODS {
     OK_HTTP_CLIENT,
     URL_CONNECTION,
     FRESCO,
+    NATIVE,
 
 }

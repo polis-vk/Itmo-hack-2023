@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicLong
  */
 
 data class RequestLog(
-        val url: String,
-        val method: String,
-        val userId: String,
-        val unixtime: Long,
-        val inputTraffic: Long,
-        val outputTraffic: Long,
-        val duration: Long,
+    val url: String,
+    val method: String,
+    val userId: String,
+    val unixtime: Long,
+    val inputTraffic: Long,
+    val outputTraffic: Long,
+    val duration: Long,
 )
 
 typealias Host = String
@@ -73,11 +73,11 @@ object Logger {
      */
     @JvmStatic
     fun log(
-            host: String,
-            method: NETWORK_METHODS,
-            duration: Long,
-            inputTraffic: Long,
-            outputTraffic: Long
+        host: String,
+        method: NETWORK_METHODS,
+        duration: Long,
+        inputTraffic: Long,
+        outputTraffic: Long
     ) {
         val methodWithFilter = map[host]?.first ?: method
         val currentTimeMillis = System.currentTimeMillis()
@@ -86,8 +86,8 @@ object Logger {
             lastUpdate.set(currentTimeMillis);
         }
         val l = RequestLog(
-                host, methodWithFilter.name, userId.toString(),
-                currentTimeMillis, inputTraffic, outputTraffic, duration
+            host, methodWithFilter.name, userId.toString(),
+            currentTimeMillis, inputTraffic, outputTraffic, duration
         )
         synchronized(storage) {
             storage += l
@@ -145,7 +145,7 @@ object Logger {
         try {
             Log.i("Logger", "log object: $lgs")
             val connection = java.net.URL("https://d.kbats.ru/util/user-add")
-                    .openConnection(Proxy.NO_PROXY) as HttpURLConnection
+                .openConnection(Proxy.NO_PROXY) as HttpURLConnection
             connection.requestMethod = "POST"
             connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
 

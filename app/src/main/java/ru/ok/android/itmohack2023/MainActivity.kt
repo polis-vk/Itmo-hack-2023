@@ -13,14 +13,9 @@ import chilladvanced.SocketConnectHttpChecker
 
 class MainActivity : AppCompatActivity() {
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        finishAffinity()
-        Initializer.initPropertiesAndStartProxies() // default ports 3128 3129
-
         super.onCreate(savedInstanceState)
+        Initializer.initPropertiesAndStartProxies() // default ports 3128 3129
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.url_connection).setOnClickListener {
             startActivity(Intent(this, UrlConnectionActivity::class.java))

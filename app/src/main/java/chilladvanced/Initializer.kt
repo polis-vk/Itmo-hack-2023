@@ -1,8 +1,5 @@
 package chilladvanced
 
-import android.content.pm.ApplicationInfo
-import android.net.TrafficStats
-
 
 object Initializer {
     private fun setProxyHostHttp(host: String) {
