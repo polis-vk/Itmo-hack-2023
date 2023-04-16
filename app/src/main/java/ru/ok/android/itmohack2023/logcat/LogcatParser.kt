@@ -2,11 +2,12 @@ package ru.ok.android.itmohack2023.logcat
 
 import java.lang.RuntimeException
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 class LogcatParser {
     private val timeRegex = Regex("\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}")
-    private val identificationRegex = Regex("\\d+ \\d+")
+    private val identificationRegex = Regex("\\d+\\s+\\d+")
     private val messRegex = Regex("D|I|E|A|W")
     private val senderRegex = Regex("\\w+")
     private val typeRegex = Regex("GET|POST|DELETE")
@@ -54,8 +55,8 @@ class LogcatParser {
             val finish = logs.filter { it.logBody.startsWith("<-- END HTTP") }[0]
             val type = process(typeRegex.find(start.logBody))
             val bytes = process(Regex("\\d+").find(finish.logBody)).toLong()
-            return LogcatRequest(startTimestamp = start.time,
-                finishTimestamp = finish.time,
+            return LogcatRequest(startTimestamp = start.time.toInstant(ZoneOffset.UTC).toEpochMilli(),
+                finishTimestamp = finish.time.toInstant(ZoneOffset.UTC).toEpochMilli(),
                 request = start.logBody.replaceFirst("--> ", ""),
                 response = response.logBody.replaceFirst("<-- ", ""),
                 bytesCount = bytes,

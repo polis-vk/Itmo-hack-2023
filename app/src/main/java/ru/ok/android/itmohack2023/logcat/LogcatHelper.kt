@@ -49,7 +49,6 @@ class LogcatHelper(private val timeout: Long, mainContext: Context) {
                     InputStream::class.java, OkHttpUrlLoader.Factory(okHttpClient)
                 )
         }
-        var processed = 0
     }
 
     val parser = LogcatParser()
@@ -73,12 +72,10 @@ class LogcatHelper(private val timeout: Long, mainContext: Context) {
                 .readLines()
                 .filter { it.contains(LOG_TAG) }
             val logs = lines
-                .drop(processed)
                 .map { parser.parse(it) }
                 .filterNotNull()
                 .filter { it.sender == LOG_TAG }
                 .groupBy { it.identification }
-            processed += lines.size
 
             val finalLogs = mutableListOf<LogcatRequest>()
 
@@ -98,10 +95,13 @@ class LogcatHelper(private val timeout: Long, mainContext: Context) {
             }
             runBlocking {
 
-                client.post("http://10.0.2.2:8080/addEvent") {
+                client.post("http://10.0.2.2:8080/addNetworkEvent") {
                     contentType(ContentType.Application.Json)
                     setBody(Gson().toJson(finalLogs))
                 }
+            }
+            withContext(Dispatchers.IO) {
+                Runtime.getRuntime().exec("logcat -c")
             }
             withContext(Dispatchers.IO) {
                 Thread.sleep(timeout)
