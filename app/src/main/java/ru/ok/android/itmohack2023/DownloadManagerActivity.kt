@@ -28,8 +28,8 @@ class DownloadManagerActivity : AppCompatActivity() {
     }
 
     private fun download(uriString: String, type: String) {
-        val downloadmanager: DownloadManager =
-            getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val downloadManager: DownloadManager =
+            (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
         val uri: Uri = Uri.parse(uriString)
         val request: DownloadManager.Request = DownloadManager.Request(uri)
         request.setTitle("Random $type")
@@ -39,7 +39,7 @@ class DownloadManagerActivity : AppCompatActivity() {
             Environment.DIRECTORY_DOWNLOADS,
             uri.lastPathSegment
         )
-        downloadmanager.enqueue(request)
+        downloadManager.enqueue(request)
     }
 
     companion object {

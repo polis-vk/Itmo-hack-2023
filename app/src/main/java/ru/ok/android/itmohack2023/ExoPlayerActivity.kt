@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import ru.ok.android.itmohack2023.okhttp.BaseClient
+
 
 class ExoPlayerActivity : AppCompatActivity() {
 
@@ -21,13 +24,24 @@ class ExoPlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        exoPlayer = ExoPlayer.Builder(this).build()
+        exoPlayer = ExoPlayer.Builder(this)
+            .setMediaSourceFactory(
+                DefaultMediaSourceFactory(
+                    OkHttpDataSource.Factory(
+                        BaseClient.getBaseOkHttpClient()
+                    )
+                )
+            )
+            .build()
         exoPlayer?.playWhenReady = true
         val playerView = findViewById<StyledPlayerView>(R.id.playerView)
         playerView.player = exoPlayer
-        val defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory()
+        val defaultHttpDataSourceFactory = OkHttpDataSource.Factory(
+            BaseClient.getBaseOkHttpClient()
+        )
         val mediaItem = MediaItem.fromUri(URL)
-        val mediaSource = HlsMediaSource.Factory(defaultHttpDataSourceFactory).createMediaSource(mediaItem)
+        val mediaSource =
+            HlsMediaSource.Factory(defaultHttpDataSourceFactory).createMediaSource(mediaItem)
         exoPlayer?.apply {
             setMediaSource(mediaSource)
             seekTo(playbackPosition)

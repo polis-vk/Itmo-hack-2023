@@ -3,8 +3,9 @@ package ru.ok.android.itmohack2023
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import ru.ok.android.itmohack2023.okhttp.BaseClient
 
 class PicassoActivity : AppCompatActivity() {
     private lateinit var dog1: ImageView
@@ -28,10 +29,20 @@ class PicassoActivity : AppCompatActivity() {
     }
 
     private fun bindImages() {
-
-        Picasso.get().load(URLS[(0 until size).random()]).placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog1)
-        Picasso.get().load(URLS[(0 until size).random()]).placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog2)
-        Picasso.get().load(URLS[(0 until size).random()]).placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog3)
+        val httpClient = BaseClient.getBaseOkHttpClient()
+        /// working
+        val picassoBuilder =
+            Picasso.Builder(this.applicationContext).downloader(OkHttp3Downloader(httpClient))
+                .build()
+        /// extract Picasso.get() to variable
+        // and change it to
+        // Picasso.Builder(...).downloader(...).build()
+        picassoBuilder.load(URLS[(0 until size).random()])
+            .placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog1)
+        picassoBuilder.load(URLS[(0 until size).random()])
+            .placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog2)
+        picassoBuilder.load(URLS[(0 until size).random()])
+            .placeholder(getDrawable(R.drawable.ico_dog)!!).into(dog3)
     }
 
     companion object {
