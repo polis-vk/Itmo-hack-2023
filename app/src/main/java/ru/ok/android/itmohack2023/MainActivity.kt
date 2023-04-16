@@ -41,14 +41,17 @@ class MainActivity : AppCompatActivity() {
         setProxyPortHttp("$proxyPortHttp")
         setProxyPortAnother("$proxyPortAnother")
 
+        val logger = Logger()
+        logger.runSending()
+
         ProxyServer(
             proxyPortHttp,
-            Logger(),
+            logger,
             SocketConnectHttpChecker.Companion::connectAndCountTraffic
         ).startServer()
         ProxyServer(
             proxyPortAnother,
-            Logger(),
+            logger,
             SocketConnect.Companion::connectAndCountTraffic
         ).startServer()
 
