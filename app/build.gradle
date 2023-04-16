@@ -73,4 +73,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.4")
     implementation("io.ktor:ktor-client-cio:2.2.4")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.github.BetsonWick:NetworkMonitor:1.1.1")
+
 }
