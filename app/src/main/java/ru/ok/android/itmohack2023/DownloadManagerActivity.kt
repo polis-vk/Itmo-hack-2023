@@ -2,7 +2,6 @@ package ru.ok.android.itmohack2023
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.TrafficStats
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -29,7 +28,6 @@ class DownloadManagerActivity : AppCompatActivity() {
     }
 
     private fun download(uriString: String, type: String) {
-        TrafficStats.UNSUPPORTED
         val downloadmanager: DownloadManager =
             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri: Uri = Uri.parse(uriString)
