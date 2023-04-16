@@ -4,10 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.NetworkLogger
 
 class MainActivity : AppCompatActivity() {
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NetworkLogger.initializeAndRunLogging()
+
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.url_connection).setOnClickListener {
             startActivity(Intent(this, UrlConnectionActivity::class.java))
