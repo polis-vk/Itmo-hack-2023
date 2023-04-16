@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import ru.ok.android.itmohack2023.logcat.LogcatHelper.Companion.createGlide
 
 class GlideActivity : AppCompatActivity() {
     private lateinit var cat1: ImageView
@@ -13,6 +14,7 @@ class GlideActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_glide)
+        createGlide(this)
 
         cat1 = findViewById(R.id.cat_photo_1)
         cat2 = findViewById(R.id.cat_photo_2)
