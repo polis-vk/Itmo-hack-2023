@@ -1,5 +1,7 @@
-package chilladvanced
+package chilladvanced.java.net
 
+import chilladvanced.Logger
+import chilladvanced.NETWORK_METHODS
 import java.io.IOException
 import java.io.InputStream
 import java.io.Serializable

@@ -2,7 +2,7 @@ package ru.ok.android.itmohack2023
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import chilladvanced.ExoPlayerWithStat
+import chilladvanced.com.google.android.exoplayer2.ExoPlayerWithStat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsMediaSource

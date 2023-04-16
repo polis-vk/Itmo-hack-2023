@@ -6,7 +6,7 @@ import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONArray
-import chilladvanced.URLWithStat
+import chilladvanced.java.net.URLWithStat
 import java.net.URL
 
 class UrlConnectionActivity : AppCompatActivity() {
