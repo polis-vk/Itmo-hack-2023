@@ -8,6 +8,8 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.Proxy
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 data class RequestLog(
     val url: String,
@@ -19,21 +21,55 @@ data class RequestLog(
     val duration: Long,
 )
 
-class Logger() {
+typealias Host = String
+
+typealias Timestamp = Long
+
+object Logger {
+    @JvmStatic
     val userId: UUID = UUID.randomUUID()
+    @JvmStatic
     private val storage = mutableSetOf<RequestLog>()
+    @JvmStatic
     val sendLogsLock = Mutex()
+    @JvmStatic
     val gson = Gson()
 
-    fun log(url: String, method: String, duration: Long, inputTraffic: Long, outputTraffic: Long) {
-        val l = RequestLog(url, method, userId.toString(), System.currentTimeMillis(), inputTraffic, outputTraffic, duration)
+    @JvmStatic
+    val map: ConcurrentHashMap<Host, Pair<NETWORK_METHODS, Timestamp>> = ConcurrentHashMap()
+    @JvmStatic
+    var lastUpdate = AtomicLong();
+    @JvmStatic
+    fun log(
+        host: String,
+        method: NETWORK_METHODS,
+        duration: Long,
+        inputTraffic: Long,
+        outputTraffic: Long
+    ) {
+        val methodWithFilter = map[host]?.first ?: method
+        val currentTimeMillis = System.currentTimeMillis()
+        if (currentTimeMillis - lastUpdate.get() > 10000) {
+            map.filterValues { (currentTimeMillis - it.second) > 10000 }.keys.forEach(map::remove)
+            lastUpdate.set(currentTimeMillis);
+        }
+        val l = RequestLog(
+            host, methodWithFilter.name, userId.toString(),
+            currentTimeMillis, inputTraffic, outputTraffic, duration
+        )
         synchronized(storage) {
             storage += l
         }
     }
 
+    @JvmStatic
+    fun register(host: String, method: NETWORK_METHODS) {
+        map[host] = Pair(method, System.currentTimeMillis());
+    }
+
 
     val SEND_LOG_TIME_SECOND = 1
+    @JvmStatic
     fun runSending() {
         Thread {
             while (true) {
@@ -43,6 +79,7 @@ class Logger() {
         }.start()
     }
 
+    @JvmStatic
     private fun sendLog() {
         val lgs = synchronized(storage) {
             storage.toList()

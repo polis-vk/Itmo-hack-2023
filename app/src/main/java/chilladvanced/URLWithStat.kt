@@ -9,7 +9,7 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.net.URLConnection
 
-class URL(private val url: URL) : Serializable {
+class URLWithStat(private val url: URL) : Serializable {
     val port: Int = url.port
     val defaultPort: Int = url.defaultPort
     val protocol: String? = url.protocol
@@ -28,20 +28,14 @@ class URL(private val url: URL) : Serializable {
     //TODO
     @Throws(IOException::class)
     fun openConnection(): URLConnection {
-        val start = System.currentTimeMillis();
-        val res = url.openConnection()
-        val duration = System.currentTimeMillis() - start;
-//        Logger.log(toString(), "URL.OPEN_CONNECTIONS", duration);
-        return res;
+        Logger.register(url.host, NETWORK_METHODS.URL_CONNECTION)
+        return url.openConnection()
     }
 
     @Throws(IOException::class)
     fun openConnection(proxy: Proxy?): URLConnection {
-        val start = System.currentTimeMillis();
-        val res = url.openConnection(proxy)
-        val duration = System.currentTimeMillis() - start;
-//        Logger.log(toString(), "URL.OPEN_CONNECTIONS_PROXY", duration);
-        return res;
+        Logger.register(url.host, NETWORK_METHODS.URL_CONNECTION)
+        return url.openConnection(proxy);
     }
 
     @Throws(IOException::class)

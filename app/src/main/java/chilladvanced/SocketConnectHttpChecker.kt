@@ -27,6 +27,7 @@ class SocketConnectHttpChecker(from: Socket, to: Socket, val addJson: Runnable) 
     }
 
     override fun run() {
+        Thread.getDefaultUncaughtExceptionHandler()
         val buffer = ByteArray(512)
         try {
             var scanner = HttpScanner()
@@ -40,7 +41,6 @@ class SocketConnectHttpChecker(from: Socket, to: Socket, val addJson: Runnable) 
                 if (r < 0) {
                     break
                 }
-                Log.d("Socket", String(buffer, 0, r))
                 trafficCounter.addAndGet(r.toLong())
                 to.write(buffer, 0, r)
                 scanner.parse(buffer, 0, r)

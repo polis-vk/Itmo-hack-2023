@@ -3,6 +3,7 @@ package ru.ok.android.itmohack2023
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.ImageRequestWithStat
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.android.material.button.MaterialButton
@@ -30,11 +31,10 @@ class FrescoActivity : AppCompatActivity() {
 
     private fun getAnimal() {
         val animal = SAMPLE_URIS_PNG[position]
-        val request = ImageRequestBuilder
+        val request = ImageRequestWithStat( ImageRequestBuilder
             .newBuilderWithSource(Uri.parse(animal))
             .disableDiskCache()
-            .disableMemoryCache()
-            .build()
+            .disableMemoryCache())
         animalsView.setImageRequest(request)
         position = (0..5).random()
     }

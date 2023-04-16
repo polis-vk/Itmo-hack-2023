@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.OkHttpClientWithStat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -43,6 +44,6 @@ class OkHttpActivity : AppCompatActivity() {
         val request: Request = Request.Builder()
             .url(url)
             .build()
-        OkHttpClient().newCall(request).execute().use { response -> return response.body?.string() }
+        OkHttpClientWithStat(OkHttpClient()).newCall(request).execute().use { response -> return response.body?.string() }
     }
 }

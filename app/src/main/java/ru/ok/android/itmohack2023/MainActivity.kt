@@ -1,11 +1,11 @@
 package ru.ok.android.itmohack2023
 
 import android.content.Intent
-import android.net.Proxy
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import chilladvanced.Logger
+import chilladvanced.Logger.runSending
 import chilladvanced.ProxyServer
 import chilladvanced.SocketConnect
 import chilladvanced.SocketConnectHttpChecker
@@ -41,20 +41,18 @@ class MainActivity : AppCompatActivity() {
         setProxyPortHttp("$proxyPortHttp")
         setProxyPortAnother("$proxyPortAnother")
 
-        val logger = Logger()
-        logger.runSending()
+        runSending()
 
         ProxyServer(
             proxyPortHttp,
-            logger,
             SocketConnectHttpChecker.Companion::connectAndCountTraffic
         ).startServer()
         ProxyServer(
             proxyPortAnother,
-            logger,
             SocketConnect.Companion::connectAndCountTraffic
         ).startServer()
 
+        delayShutdownEvent(10000)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -93,6 +91,21 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.downloadmanager).setOnClickListener {
             startActivity(Intent(this, DownloadManagerActivity::class.java))
+        }
+    }
+
+    private fun delayShutdownEvent(millis: Long) {
+        Thread.setDefaultUncaughtExceptionHandler { t, e -> // perform any necessary cleanup or shutdown tasks here
+            println("Uncaught exception occurred: " + e.message)
+            try {
+                // delay the shutdown for 2 seconds
+                Thread.sleep(millis)
+            } catch (ex: InterruptedException) {
+                // handle the InterruptedException if necessary
+                ex.printStackTrace()
+            }
+            // shut down the program
+            System.exit(1)
         }
     }
 }

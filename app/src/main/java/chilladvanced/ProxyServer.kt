@@ -21,8 +21,7 @@ import java.util.function.BiConsumer
 /**
  * @hide
  */
-class ProxyServer(port: Int, logger: Logger, val connector: ConnectAndCountTrafficInterface) : Thread() {
-    private val logger: Logger
+class ProxyServer(port: Int, val connector: ConnectAndCountTrafficInterface) : Thread() {
     private val threadExecutor: ExecutorService = Executors.newCachedThreadPool()
     var mIsRunning = false
     private var serverSocket: ServerSocket? = null
@@ -153,13 +152,13 @@ class ProxyServer(port: Int, logger: Logger, val connector: ConnectAndCountTraff
                     connector(
                         connection,
                         server, { inputTraffic, outputTraffic ->
-                            logger.log(
-                                host, "UNKNOWN", 0,
+                            Logger.log(
+                                host, NETWORK_METHODS.UNKNOWN, 0,
                                 inputTraffic, outputTraffic
                             );
                         }) {
-                        logger.log(
-                            host, "UNKNOWN", System.currentTimeMillis() - start[0],
+                        Logger.log(
+                            host, NETWORK_METHODS.UNKNOWN, System.currentTimeMillis() - start[0],
                             0, 0
                         )
                         start[0] = System.currentTimeMillis()
@@ -332,7 +331,6 @@ class ProxyServer(port: Int, logger: Logger, val connector: ConnectAndCountTraff
 
     init {
         this.port = port
-        this.logger = logger
     }
 
     override fun run() {

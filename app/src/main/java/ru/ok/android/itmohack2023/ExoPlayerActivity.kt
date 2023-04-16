@@ -2,6 +2,7 @@ package ru.ok.android.itmohack2023
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import chilladvanced.ExoPlayerWithStat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -21,7 +22,7 @@ class ExoPlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        exoPlayer = ExoPlayer.Builder(this).build()
+        exoPlayer = ExoPlayerWithStat(ExoPlayer.Builder(this).build())
         exoPlayer?.playWhenReady = true
         val playerView = findViewById<StyledPlayerView>(R.id.playerView)
         playerView.player = exoPlayer

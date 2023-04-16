@@ -6,7 +6,8 @@ import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONArray
-import chilladvanced.URL
+import chilladvanced.URLWithStat
+import java.net.URL
 
 class UrlConnectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +16,7 @@ class UrlConnectionActivity : AppCompatActivity() {
         val list = findViewById<ViewGroup>(R.id.list)
 
         Threads.ioPool.execute {
-            val connection = URL(java.net.URL("https://cat-fact.herokuapp.com/facts")).openConnection()
+            val connection = URLWithStat(URL("https://cat-fact.herokuapp.com/facts")).openConnection()
             val text = connection.getInputStream().bufferedReader().readText()
             val textJson = JSONArray(text)
             for (i in 0 until textJson.length()) {
