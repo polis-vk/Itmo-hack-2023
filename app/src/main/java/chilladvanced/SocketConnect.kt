@@ -1,7 +1,6 @@
 package chilladvanced
 
 import android.util.Log
-import okhttp3.internal.wait
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -40,20 +39,13 @@ class SocketConnect(from: Socket, to: Socket) : Thread() {
         }
     }
 
-    class TrafficUsed(val inputTraffic: Long, val outputTraffic: Long) {
-
-        companion object {
-            @JvmField
-            val ZERO = TrafficUsed(0, 0)
-        }
-    }
-
     companion object {
         @JvmStatic
         fun connectAndCountTraffic(
             first: Socket,
             second: Socket,
-            consumer: BiConsumer<Long, Long>
+            consumer: BiConsumer<Long, Long>,
+            runnable: Runnable
         ) {
             try {
                 val sc1 = SocketConnect(first, second)
@@ -67,9 +59,11 @@ class SocketConnect(from: Socket, to: Socket) : Thread() {
                     sc2.trafficCounter = 0
                     sc1.trafficCounter = 0
                 }
+                runnable.run()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
     }
 }
+

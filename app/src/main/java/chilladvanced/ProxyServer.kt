@@ -2,7 +2,6 @@ package chilladvanced
 
 import android.util.Log
 import chilladvanced.SocketConnect.Companion.connectAndCountTraffic
-import chilladvanced.SocketConnect.TrafficUsed
 import com.google.common.collect.Lists
 import java.io.IOException
 import java.io.InputStream
@@ -17,12 +16,11 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.function.BiConsumer
 
 /**
  * @hide
  */
-class ProxyServer(port: Int, logger: Logger) : Thread() {
+class ProxyServer(port: Int, logger: Logger, connector: ConnectAndCountTrafficInterface) : Thread() {
     private val logger: Logger
     private val threadExecutor: ExecutorService = Executors.newCachedThreadPool()
     var mIsRunning = false
@@ -147,20 +145,25 @@ class ProxyServer(port: Int, logger: Logger) : Thread() {
                         )
                     }
                 }
-                val start = System.currentTimeMillis()
+                val start = LongArray(1)
+                start[0] = System.currentTimeMillis()
                 // Pass data back and forth until complete.
                 if (server != null) {
-                    connectAndCountTraffic(
+                    SocketConnectHttpChecker.connectAndCountTraffic(
                         connection,
-                        server,
-                    ) { inputTraffic: Long, outputTraffic: Long ->
+                        server, { inputTraffic, outputTraffic ->
+                            logger.log(
+                                host, "UNKNOWN", 0,
+                                inputTraffic, outputTraffic
+                            );
+                        }) {
                         logger.log(
-                            host, "UNKNOWN", System.currentTimeMillis() - start,
-                            inputTraffic, outputTraffic
-                        );
+                            host, "UNKNOWN", System.currentTimeMillis() - start[0],
+                            0, 0
+                        )
+                        start[0] = System.currentTimeMillis()
                     }
                 }
-
             } catch (e: Exception) {
                 Log.d(TAG, "Problem Proxying", e)
             }
