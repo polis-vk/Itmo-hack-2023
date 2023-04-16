@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import ru.ok.android.itmohack2023.pixels.okHttp.OkHttpInterceptor
 import java.io.IOException
 
 class OkHttpActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +38,17 @@ class OkHttpActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     @Throws(IOException::class)
     fun run(url: String): String? {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(OkHttpInterceptor())
+            .build()
         val request: Request = Request.Builder()
             .url(url)
             .build()
-        OkHttpClient().newCall(request).execute().use { response -> return response.body?.string() }
+        client.newCall(request).execute().use { response -> return response.body?.string() }
     }
 }

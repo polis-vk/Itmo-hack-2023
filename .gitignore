@@ -1,0 +1,10 @@
+
+*.bin
+*.lock
+.idea/workspace.xml
+.idea/kotlinc.xml
+.gradle/vcs-1/gc.properties
+.gradle/buildOutputCleanup/cache.properties
+*.bin
+local.properties
+local.properties
