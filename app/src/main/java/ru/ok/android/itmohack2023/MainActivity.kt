@@ -7,29 +7,50 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import chilladvanced.Logger
 import chilladvanced.ProxyServer
+import chilladvanced.SocketConnect
+import chilladvanced.SocketConnectHttpChecker
 
 class MainActivity : AppCompatActivity() {
 
-    private fun setProxyHost(host: String) {
+
+    private fun setProxyHostHttp(host: String) {
         System.setProperty("http.proxyHost", host);
+    }
+
+    private fun setProxyPortHttp(host: String) {
+        System.setProperty("http.proxyPort", host);
+    }
+
+    private fun setProxyHostAnother(host: String) {
         System.setProperty("https.proxyHost", host);
         System.setProperty("ftp.proxyHost", host);
         System.setProperty("socksProxyHost", host);
     }
 
-    private fun setProxyPort(port: String) {
-        System.setProperty("http.proxyPort", port);
+    private fun setProxyPortAnother(port: String) {
         System.setProperty("https.proxyPort", port);
         System.setProperty("ftp.proxyPort", port);
         System.setProperty("socksProxyPort", port);
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val proxyPort = 3128;
-        setProxyHost("127.0.0.1")
-        setProxyPort("$proxyPort")
+        val proxyPortHttp = 3128;
+        val proxyPortAnother = 3129;
+        setProxyHostHttp("127.0.0.1")
+        setProxyHostAnother("127.0.0.1")
+        setProxyPortHttp("$proxyPortHttp")
+        setProxyPortAnother("$proxyPortAnother")
 
-        ProxyServer(proxyPort, Logger()).startServer()
+        ProxyServer(
+            proxyPortHttp,
+            Logger(),
+            SocketConnectHttpChecker.Companion::connectAndCountTraffic
+        ).startServer()
+        ProxyServer(
+            proxyPortAnother,
+            Logger(),
+            SocketConnect.Companion::connectAndCountTraffic
+        ).startServer()
 
 
         super.onCreate(savedInstanceState)

@@ -16,11 +16,12 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.function.BiConsumer
 
 /**
  * @hide
  */
-class ProxyServer(port: Int, logger: Logger, connector: ConnectAndCountTrafficInterface) : Thread() {
+class ProxyServer(port: Int, logger: Logger, val connector: ConnectAndCountTrafficInterface) : Thread() {
     private val logger: Logger
     private val threadExecutor: ExecutorService = Executors.newCachedThreadPool()
     var mIsRunning = false
@@ -149,7 +150,7 @@ class ProxyServer(port: Int, logger: Logger, connector: ConnectAndCountTrafficIn
                 start[0] = System.currentTimeMillis()
                 // Pass data back and forth until complete.
                 if (server != null) {
-                    SocketConnectHttpChecker.connectAndCountTraffic(
+                    connector(
                         connection,
                         server, { inputTraffic, outputTraffic ->
                             logger.log(
@@ -391,3 +392,10 @@ class ProxyServer(port: Int, logger: Logger, connector: ConnectAndCountTrafficIn
         private const val HEADER_PROXY_CONNECTION = "proxy-connection"
     }
 }
+
+typealias ConnectAndCountTrafficInterface  = (
+    first: Socket,
+    second: Socket,
+    consumer: BiConsumer<Long, Long>,
+    runnable: Runnable
+) -> Unit
